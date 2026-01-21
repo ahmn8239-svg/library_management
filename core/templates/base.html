@@ -23,35 +23,45 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand me-4" href="{% url 'core:home' %}">
-                <i class="bi bi-book-half"></i> نظام إدارة المكتبة <small class="ms-2 opacity-75"
-                    style="font-size: 0.75rem;">(ID: 25164494)</small>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            <a class="navbar-brand me-0" href="{% url 'core:home' %}">
+                <i class="bi bi-book-half"></i> نظام إدارة المكتبة
+            </a>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-lg-none">
-                    <!-- Mobile only links -->
+                <!-- Mobile Only Links (Show inside the burger menu) -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-lg-none mt-3 border-top pt-2">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:home' %}">الرئيسية</a>
+                        <a class="nav-link" href="{% url 'core:home' %}"><i class="bi bi-house-door ms-2"></i>
+                            الرئيسية</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:book_list' %}">الكتب</a>
+                        <a class="nav-link" href="{% url 'core:book_list' %}"><i class="bi bi-book ms-2"></i> إدارة
+                            الكتب</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:member_list' %}">الأعضاء</a>
+                        <a class="nav-link" href="{% url 'core:member_list' %}"><i class="bi bi-people ms-2"></i> إدارة
+                            الأعضاء</a>
                     </li>
                     {% if is_manager %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:employee_list' %}">الموظفين</a>
+                        <a class="nav-link" href="{% url 'core:employee_list' %}"><i
+                                class="bi bi-person-badge ms-2"></i> الموظفين</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:borrowing_list' %}">الإعارات</a>
+                        <a class="nav-link" href="{% url 'core:borrowing_list' %}"><i
+                                class="bi bi-journal-arrow-up ms-2"></i> الإعارات</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin"><i class="bi bi-shield-lock ms-2"></i> لوحة المسؤول</a>
                     </li>
                 </ul>
-                <div class="d-flex w-100 justify-content-end text-white align-items-center">
+
+                <div class="d-flex w-100 justify-content-end text-white align-items-center mt-lg-0 mt-3">
                     <div class="dropdown">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                             id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
