@@ -14,11 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     });
 
-    // 3. Active Sidebar Link Highlighting
+    // 3. Active Sidebar/Navbar Link Highlighting
     const currentPath = window.location.pathname;
-    const sidebarLinks = document.querySelectorAll('#sidebarMenu .nav-link');
+    const navLinks = document.querySelectorAll('#sidebarMenu .nav-link, .navbar-nav .nav-link');
 
-    sidebarLinks.forEach(function (link) {
+    navLinks.forEach(function (link) {
         link.classList.remove('active');
         const linkPath = link.getAttribute('href');
         if (linkPath && linkPath !== '#' && (currentPath === linkPath || currentPath.startsWith(linkPath))) {

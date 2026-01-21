@@ -37,16 +37,18 @@
                         <a class="nav-link" href="{% url 'core:home' %}">الرئيسية</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">الكتب</a>
+                        <a class="nav-link" href="{% url 'core:book_list' %}">الكتب</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">الأعضاء</a>
+                        <a class="nav-link" href="{% url 'core:member_list' %}">الأعضاء</a>
                     </li>
+                    {% if is_manager %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">الموظفين</a>
+                        <a class="nav-link" href="{% url 'core:employee_list' %}">الموظفين</a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">الإعارات</a>
+                        <a class="nav-link" href="{% url 'core:borrowing_list' %}">الإعارات</a>
                     </li>
                 </ul>
                 <div class="d-flex w-100 justify-content-end text-white align-items-center">
