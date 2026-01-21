@@ -18,8 +18,8 @@ def home(request):
         'total_members': Member.objects.count(),
         'total_employees': Employee.objects.count(),
         'total_borrowed': Borrow.objects.filter(status='active').count(),
-        'latest_books': Book.objects.order_by('-id')[:5],
-        'latest_borrowings': Borrow.objects.order_by('-borrow_date')[:5],
+        'latest_books': Book.objects.select_related('category').order_by('-id')[:5],
+        'latest_borrowings': Borrow.objects.select_related('book', 'member').order_by('-borrow_date')[:5],
     }
     return render(request, 'index.html', context)
 
@@ -33,7 +33,8 @@ def is_manager_or_admin(user):
 
 @login_required
 def book_list(request):
-    books = Book.objects.all()
+    # Optimize: select_related for ForeignKey, prefetch_related for ManyToMany
+    books = Book.objects.select_related('category').prefetch_related('authors').all()
     return render(request, 'books/book_list.html', {'books': books})
 
 @login_required
@@ -135,7 +136,8 @@ def employee_detail(request, pk):
 @login_required
 @user_passes_test(is_manager_or_admin)
 def employee_list(request):
-    employees = Employee.objects.all()
+    # Optimize: select_related for the linked User object
+    employees = Employee.objects.select_related('user').all()
     return render(request, 'employees/employee_list.html', {'employees': employees})
 
 def is_manager_or_admin(user): 
@@ -206,7 +208,8 @@ def borrowing_detail(request, pk):
 
 @login_required
 def borrowing_list(request):
-    borrowings = Borrow.objects.all()
+    # Optimize: select_related for all related foreign keys
+    borrowings = Borrow.objects.select_related('book', 'member', 'employee__user').all()
     return render(request, 'borrowing/borrow_list.html', {'borrowings': borrowings})
 
 @login_required
