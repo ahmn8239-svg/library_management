@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}سجل الإعارات{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>سجل الإعارات</h2>
+    <div class="d-flex gap-2">
+        <input type="text" id="tableSearch" class="form-control" placeholder="بحث سريع..." style="max-width: 250px;">
+        <a href="{% url 'core:borrowing_create' %}" class="btn btn-primary text-nowrap">
+            <i class="bi bi-journal-plus"></i> تسجيل إعارة جديدة
+        </a>
+    </div>
+</div>
+...
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الكتاب</th>
+                        <th>المستعير</th>
+                        <th>تاريخ الإعارة</th>
+                        <th>تاريخ الاستحقاق</th>
+                        <th>الحالة</th>
+                        <th>الاجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for borrow in borrowings %}
+                    <tr>
+                        <td>{{ borrow.id }}</td>
+                        <td>{{ borrow.book.title }}</td>
+                        <td>{{ borrow.member.full_name }}</td>
+                        <td>{{ borrow.borrow_date|date:"Y-m-d" }}</td>
+                        <td>{{ borrow.due_date|date:"Y-m-d" }}</td>
+                        <td>
+                            {% if borrow.status == 'active' %}
+                            <span class="badge bg-primary">نشط</span>
+                            {% elif borrow.status == 'returned' %}
+                            <span class="badge bg-success">تم الارجاع</span>
+                            {% else %}
+                            <span class="badge bg-danger">متأخر</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'core:borrowing_detail' borrow.pk %}"
+                                    class="btn btn-sm btn-outline-primary" title="Details"><i class="bi bi-eye"></i></a>
+                                <a href="{% url 'core:borrowing_update' borrow.pk %}"
+                                    class="btn btn-sm btn-outline-warning" title="Edit"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'core:borrowing_delete' borrow.pk %}"
+                                    class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">لا توجد عمليات إعارة مسجلة</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

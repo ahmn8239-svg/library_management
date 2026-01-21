@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}إدارة الموظفين{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>إدارة الموظفين</h2>
+    <div class="d-flex gap-2">
+        <input type="text" id="tableSearch" class="form-control" placeholder="بحث سريع..." style="max-width: 250px;">
+        {% if is_manager %}
+        <a href="{% url 'core:employee_create' %}" class="btn btn-primary text-nowrap">
+            <i class="bi bi-person-plus-fill"></i> إضافة موظف جديد
+        </a>
+        {% endif %}
+    </div>
+</div>
+...
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الاسم</th>
+                        <th>الدور الوظيفي</th>
+                        <th>رقم الهاتف</th>
+                        <th>العنوان</th>
+                        <th>الاجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.id }}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2 text-info"
+                                    style="width: 32px; height: 32px;">
+                                    <i class="bi bi-person-badge"></i>
+                                </div>
+                                {{ employee.user.get_full_name|default:employee.user.username }}
+                            </div>
+                        </td>
+                        <td>
+                            {% if employee.role == 'manager' %}
+                            <span class="badge bg-danger">مدير</span>
+                            {% elif employee.role == 'librarian' %}
+                            <span class="badge bg-primary">أمين مكتبة</span>
+                            {% else %}
+                            <span class="badge bg-secondary">مساعد</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ employee.phone }}</td>
+                        <td>{{ employee.address|default:"-" }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'core:employee_detail' employee.pk %}"
+                                    class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+                                {% if is_manager %}
+                                <a href="{% url 'core:employee_update' employee.pk %}"
+                                    class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
+                                {% endif %}
+                                {% if is_manager %}
+                                <a href="{% url 'core:employee_delete' employee.pk %}"
+                                    class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">لا يوجد موظفين مسجلين حتى الآن</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

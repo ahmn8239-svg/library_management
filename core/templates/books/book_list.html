@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}إدارة الكتب{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>إدارة الكتب</h2>
+    <div class="d-flex gap-2">
+        <input type="text" id="tableSearch" class="form-control" placeholder="بحث سريع..." style="max-width: 250px;">
+        <a href="{% url 'core:book_create' %}" class="btn btn-primary text-nowrap">
+            <i class="bi bi-plus-lg"></i> إضافة كتاب جديد
+        </a>
+    </div>
+</div>
+...
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>العنوان</th>
+                        <th>المؤلف</th>
+                        <th>التصنيف</th>
+                        <th>الحالة</th>
+                        <th>الاجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td>{{ book.id }}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                {% if book.cover_image %}
+                                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="rounded me-2"
+                                    style="width: 40px; height: 60px; object-fit: cover;">
+                                {% else %}
+                                <div class="rounded me-2 bg-secondary d-flex align-items-center justify-content-center text-white"
+                                    style="width: 40px; height: 60px;">
+                                    <i class="bi bi-book"></i>
+                                </div>
+                                {% endif %}
+                                {{ book.title }}
+                            </div>
+                        </td>
+                        <td>
+                            {% for author in book.authors.all %}
+                            {{ author.name }}{% if not forloop.last %}، {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ book.category.name|default:"-" }}</td>
+                        <td>
+                            {% if book.status == 'available' %}
+                            <span class="badge bg-success">متاح</span>
+                            {% elif book.status == 'borrowed' %}
+                            <span class="badge bg-warning text-dark">مستعار</span>
+                            {% else %}
+                            <span class="badge bg-danger">{{ book.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'core:book_detail' book.pk %}" class="btn btn-sm btn-outline-primary"><i
+                                        class="bi bi-eye"></i></a>
+                                <a href="{% url 'core:book_update' book.pk %}" class="btn btn-sm btn-outline-warning"><i
+                                        class="bi bi-pencil"></i></a>
+                                <a href="{% url 'core:book_delete' book.pk %}" class="btn btn-sm btn-outline-danger"><i
+                                        class="bi bi-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">لا توجد كتب مضافة حتى الآن</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

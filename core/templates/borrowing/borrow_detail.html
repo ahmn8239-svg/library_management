@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">تفاصيل الإعارة #{{ borrow.id }}</h5>
+                    <a href="{% url 'core:borrowing_list' %}" class="btn btn-sm btn-light">
+                        <i class="bi bi-arrow-right"></i> عودة للقائمة
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100 border-primary">
+                                <div class="card-header bg-transparent text-primary">الكتاب</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ borrow.book.title }}</h5>
+                                    <p class="card-text text-muted">ISBN: {{ borrow.book.isbn }}</p>
+                                    <a href="{% url 'core:book_detail' borrow.book.pk %}"
+                                        class="btn btn-sm btn-outline-primary">عرض الكتاب</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100 border-success">
+                                <div class="card-header bg-transparent text-success">العضو</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ borrow.member.full_name }}</h5>
+                                    <p class="card-text text-muted">{{ borrow.member.email }}</p>
+                                    <a href="{% url 'core:member_detail' borrow.member.pk %}"
+                                        class="btn btn-sm btn-outline-success">عرض العضو</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="border-bottom pb-2 mb-3">بيانات الإعارة</h6>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th class="w-25">تاريخ الإعارة:</th>
+                                <td>{{ borrow.borrow_date|date:"Y-m-d" }}</td>
+                            </tr>
+                            <tr>
+                                <th>تاريخ الاستحقاق:</th>
+                                <td>{{ borrow.due_date|date:"Y-m-d" }}</td>
+                            </tr>
+                            <tr>
+                                <th>تاريخ الإرجاع:</th>
+                                <td>
+                                    {% if borrow.return_date %}
+                                    {{ borrow.return_date|date:"Y-m-d" }}
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>الحالة:</th>
+                                <td>
+                                    {% if borrow.status == 'active' %}
+                                    <span class="badge bg-primary">نشط - جارية</span>
+                                    {% elif borrow.status == 'returned' %}
+                                    <span class="badge bg-success">تم الإرجاع</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">متأخر</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>الموظف المسؤول:</th>
+                                <td>{{
+                                    borrow.employee.user.get_full_name|default:borrow.employee.user.username|default:"-"
+                                    }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer bg-light d-flex justify-content-end gap-2">
+                    <a href="{% url 'core:borrowing_update' borrow.pk %}" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> تعديل
+                    </a>
+                    <a href="{% url 'core:borrowing_delete' borrow.pk %}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> حذف
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

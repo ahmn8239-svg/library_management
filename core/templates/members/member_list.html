@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}إدارة الأعضاء{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>إدارة الأعضاء</h2>
+    <div class="d-flex gap-2">
+        <input type="text" id="tableSearch" class="form-control" placeholder="بحث سريع..." style="max-width: 250px;">
+        <a href="{% url 'core:member_create' %}" class="btn btn-primary text-nowrap">
+            <i class="bi bi-person-plus"></i> إضافة عضو جديد
+        </a>
+    </div>
+</div>
+...
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الاسم الكامل</th>
+                        <th>رقم الهاتف</th>
+                        <th>نوع العضوية</th>
+                        <th>المستوى</th>
+                        <th>حالة الاستعارة</th>
+                        <th>الاجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in members %}
+                    <tr>
+                        <td>{{ member.id }}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2 text-primary"
+                                    style="width: 32px; height: 32px;">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                                {{ member.full_name }}
+                            </div>
+                        </td>
+                        <td>{{ member.phone }}</td>
+                        <td>{{ member.get_membership_type_display }}</td>
+                        <td>
+                            {% if member.membership_level == 'gold' %}
+                            <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> ذهبي</span>
+                            {% elif member.membership_level == 'silver' %}
+                            <span class="badge bg-secondary">فضي</span>
+                            {% else %}
+                            <span class="badge bg-light text-dark">عادي</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="progress" style="height: 6px; width: 100px;">
+                                <div class="progress-bar" role="progressbar"
+                                    style="width: {{ member.borrow_percentage|default:0 }}%;"></div>
+                            </div>
+                            <small class="text-muted">{{ member.current_borrowed }} / {{ member.max_borrow_limit
+                                }}</small>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'core:member_detail' member.pk %}"
+                                    class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+                                <a href="{% url 'core:member_update' member.pk %}"
+                                    class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'core:member_delete' member.pk %}"
+                                    class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">لا يوجد أعضاء مسجلين حتى الآن</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

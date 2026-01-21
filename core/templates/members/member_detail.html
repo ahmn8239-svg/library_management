@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ member.full_name }}</h5>
+                    <a href="{% url 'core:member_list' %}" class="btn btn-sm btn-light text-success">
+                        <i class="bi bi-arrow-right"></i> عودة للقائمة
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto shadow-sm text-success"
+                                style="width: 120px; height: 120px;">
+                                <i class="bi bi-person display-3"></i>
+                            </div>
+                            <h5 class="mt-3">{{ member.full_name }}</h5>
+                            <span class="badge bg-success">{{ member.get_membership_type_display }}</span>
+                        </div>
+                        <div class="col-md-8">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <th class="w-25">البريد الإلكتروني:</th>
+                                        <td>{{ member.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>رقم الهاتف:</th>
+                                        <td>{{ member.phone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>المستوى:</th>
+                                        <td>
+                                            {% if member.membership_level == 'gold' %}
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i>
+                                                ذهبي</span>
+                                            {% elif member.membership_level == 'silver' %}
+                                            <span class="badge bg-secondary">فضي</span>
+                                            {% else %}
+                                            <span class="badge bg-light text-dark border">عادي</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>حد الاستعارة:</th>
+                                        <td>{{ member.max_borrow_limit }} كتب</td>
+                                    </tr>
+                                    <tr>
+                                        <th>الكتب المستعارة:</th>
+                                        <td>
+                                            <div class="progress mt-1" style="height: 10px;">
+                                                <div class="progress-bar bg-success" role="progressbar"
+                                                    style="width: {{ member.borrow_percentage|default:0 }}%;">
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">{{ member.current_borrowed }} من {{
+                                                member.max_borrow_limit }}</small>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light d-flex justify-content-end gap-2">
+                    <a href="{% url 'core:member_update' member.pk %}" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> تعديل
+                    </a>
+                    <a href="{% url 'core:member_delete' member.pk %}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> حذف
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
