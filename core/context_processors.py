@@ -11,8 +11,10 @@ def is_manager(request):
     if user.is_superuser:
         return {'is_manager': True}
     
-    
-    if hasattr(user, 'employee') and user.employee.role == 'manager':
+    # Use select_related if possible or check attribute directly
+    # Check if the role is 'manager' without triggering multiple queries
+    employee = getattr(user, 'employee', None)
+    if employee and employee.role == 'manager':
         return {'is_manager': True}
         
     return {'is_manager': False}
